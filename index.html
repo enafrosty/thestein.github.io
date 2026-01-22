@@ -337,7 +337,6 @@
             background: #333;
             color: #333;
             padding: 0.2rem 0.4rem;
-            border-radius: 3px;
             display: inline-block;
             min-width: 2rem;
             text-decoration: underline;
@@ -377,7 +376,7 @@
     <div class="chat-container welcome-mode" id="chatContainer">
         <div class="welcome-section" id="welcomeSection">
             <div class="greeting">Hi User</div>
-            <h1 class="main-heading">What can we explore today?</h1>
+            <h1 class="main-heading">What can we hide today?</h1>
         </div>
 
         <div class="chat-view" id="chatView">
@@ -408,13 +407,13 @@
             return redactedWords.join(' ');
         }
 
-        const API_KEY = "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";
+        const API_KEY = "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";
 
         async function callOpenRouterAPI(prompt) {
             const url = 'https://openrouter.ai/api/v1/chat/completions';
 
             const data = {
-                model: 'tngtech/deepseek-r1t2-chimera:free',
+                model: 'meta-llama/llama-3.3-70b-instruct:free',
                 messages: [
                     {
                         role: 'user',
@@ -557,4 +556,3 @@
     </script>
 </body>
 </html>
-
