@@ -407,17 +407,19 @@
             return redactedWords.join(' ');
         }
 
-        const API_KEY = "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";
+        const API_KEY = "AIzaSyBo8FptQY4kYtmYMP_oOYBwIjyJIQwX0YI";
 
         async function callOpenRouterAPI(prompt) {
-            const url = 'https://openrouter.ai/api/v1/chat/completions';
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${API_KEY}`;
 
             const data = {
-                model: 'meta-llama/llama-3.3-70b-instruct:free',
-                messages: [
+                contents: [
                     {
-                        role: 'user',
-                        content: prompt
+                        parts: [
+                            {
+                                text: prompt
+                            }
+                        ]
                     }
                 ]
             };
@@ -426,9 +428,6 @@
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${API_KEY}`,
-                        'HTTP-Referer': 'https://morsegpt.com',
-                        'X-Title': 'MorseGPT',
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(data),
@@ -440,15 +439,24 @@
                 }
 
                 const json = await response.json();
-                console.log("OpenRouter API Response:", json); 
+                console.log("Gemini API Response:", json); 
 
-                if (!json.choices || json.choices.length === 0 || !json.choices[0].message || !json.choices[0].message.content) {
-                    throw new Error("Invalid response format from OpenRouter API.");
+                if (!json.candidates || json.candidates.length === 0 || !json.candidates[0].content || !json.candidates[0].content.parts || json.candidates[0].content.parts.length === 0) {
+                    throw new Error("Invalid response format from Gemini API.");
                 }
 
-                return json;
+                // Convert Gemini response format to OpenRouter format for compatibility
+                return {
+                    choices: [
+                        {
+                            message: {
+                                content: json.candidates[0].content.parts[0].text
+                            }
+                        }
+                    ]
+                };
             } catch (error) {
-                console.error('Error calling OpenRouter API:', error);
+                console.error('Error calling Gemini API:', error);
                 throw error; 
             }
         }
